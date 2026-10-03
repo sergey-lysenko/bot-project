@@ -1,0 +1,14 @@
+# ==============================================================================
+# General Configuration
+# ==============================================================================
+
+# Time interval (in milliseconds) between checking the state of a manual pause.
+# .pause.length=5000
+
+# ------------------------------------------------------------------------------
+# Screen index to spawn the UI interface (dashboard).
+# .screen.to.spawn.dashboard=0
+
+# ------------------------------------------------------------------------------
+# Number of retries allowed for various actions.
+# .action.retries=3

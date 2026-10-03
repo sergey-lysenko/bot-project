@@ -1,0 +1,10 @@
+# ==============================================================================
+# Project-Specific Values
+# ==============================================================================
+
+# Root package of the scenarios tree.
+.root=bot.tree
+
+# ------------------------------------------------------------------------------
+# Default behavior of Scenario without overridden fits() function
+.fits.by.default=true

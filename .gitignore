@@ -1,0 +1,16 @@
+/*.apk
+/.classpath
+/.idea/*
+/.project
+/.settings/*
+/appium*
+/environment.bash
+/etc/device
+/etc/users-pool
+/etc/*.users
+/target/
+/var/*
+/dependency-reduced-pom.xml
+/README.md
+.DS_Store
+framework

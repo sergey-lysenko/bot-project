@@ -1,0 +1,28 @@
+# ==============================================================================
+# BiteHeist Specific Configuration
+# ==============================================================================
+
+# Target website or admin dashboard URL
+# .domain=https://stg-dashboard.myordering.online
+
+# Permanent exceptions for log line similarity
+.log.lines.similarity.exceptions.permanent=Finding|↑|?|{k=
+
+# Default user role preference for test execution (admin, manager, customer, any)
+# .user.role=admin
+
+# ------------------------------------------------------------------------------
+# Login Rate Limiting Configuration
+# ------------------------------------------------------------------------------
+
+# Enable rate limiting testing mode (forces logout each test and expects TOO_MANY_LOGIN_ATTEMPTS dialog)
+# .login.rate.limit.test=false
+
+# Number of login attempts allowed within the sliding window threshold
+# .login.rate.limit.attempts=5
+
+# Cooldown duration in seconds for the rate limit sliding window
+# .login.rate.limit.cooldown.seconds=60
+
+# Whether to sleep through the cooldown and retry login after verifying the rate limit dialog
+# .login.rate.limit.test.retry=false
