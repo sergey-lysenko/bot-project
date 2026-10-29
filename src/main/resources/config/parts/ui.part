@@ -1,0 +1,21 @@
+# ==============================================================================
+# Dashboard & Display UI Settings
+# ==============================================================================
+
+# Screen index on which to open the dashboard. Default: 0
+# .screen.to.spawn.dashboard=0
+
+# ==============================================================================
+# Mobile Device Resolution & Identifier Settings
+# ==============================================================================
+
+# Native screen width in pixels used for coordinate-based mobile interactions. Default: 1080
+# .mobi.native.x.resolution=1080
+
+# ------------------------------------------------------------------------------
+# Native screen height in pixels used for coordinate-based mobile interactions. Default: 2280
+# .mobi.native.y.resolution=2280
+
+# ------------------------------------------------------------------------------
+# Device identifier (UDID) used to select a specific mobile device. Default:
+# .mobi.ud.id=

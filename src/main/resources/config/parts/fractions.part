@@ -1,0 +1,10 @@
+# ==============================================================================
+# Math & Fraction Translation Settings
+# ==============================================================================
+
+# Maximum decimal precision used when representing fractional values. Default: 9
+# .math.fractions.accuracy=9
+
+# ------------------------------------------------------------------------------
+# Displays fractional values in fraction form where supported instead of decimal form. Default: false
+# .math.fractions.output=false

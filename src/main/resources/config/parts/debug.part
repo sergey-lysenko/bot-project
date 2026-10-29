@@ -1,0 +1,14 @@
+# ==============================================================================
+# Debugging & Diagnostics Settings
+# ==============================================================================
+
+# Writes detailed Appium diagnostic output to the log. Default: false
+# .logs.adebug=false
+
+# ------------------------------------------------------------------------------
+# Enables additional diagnostic output to help analyze test execution. Default: false
+# .logs.debug=false
+
+# ------------------------------------------------------------------------------
+# Adds method names and variable values to diagnostic output. Default: false
+# .logs.trace=false

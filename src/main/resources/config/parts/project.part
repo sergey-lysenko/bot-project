@@ -1,0 +1,25 @@
+# ==============================================================================
+# Project-Specific Values
+# ==============================================================================
+
+# Root package of the scenarios tree. Default:
+.test.root=link.tree
+
+# ------------------------------------------------------------------------------
+# Path to the APK file or package for the application under test. Default:
+# .test.app=
+
+# ------------------------------------------------------------------------------
+# Application bundle ID used for launch and restart operations. Default:
+# .test.bundle.id=
+
+# ==============================================================================
+# Log Line Similarity Exceptions
+# ==============================================================================
+
+# Permanent exceptions that permanently exclude matching log lines from similarity grouping. Default:
+# .logs.lines.similarity.exceptions.permanent=
+
+# ------------------------------------------------------------------------------
+# Temporary exceptions that temporarily exclude matching log lines from similarity grouping. Default:
+# .logs.lines.similarity.exceptions.temporary=

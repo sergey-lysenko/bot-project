@@ -1,0 +1,18 @@
+# ==============================================================================
+# Stack Trace Configuration
+# ==============================================================================
+
+# Includes the full stack trace instead of shortening it for logs. Default: false
+# .logs.full.stacktrace=false
+
+# ------------------------------------------------------------------------------
+# Comma-separated class names omitted from shortened stack traces. Default:
+# .logs.ignored.in.stacktrace=BotRunner,ClassLoader,Ctrl,Ctrl$Selector,Cycler,Cycles,Exec,Leaf,Logger,LoggerCore,Node,Root,ScenarioLoader
+
+# ------------------------------------------------------------------------------
+# Shows source line numbers in shortened stack traces. Default: false
+# .logs.line.number.in.short.stacktrace=false
+
+# ------------------------------------------------------------------------------
+# Replaces repeated stack traces in logs with references to their earlier occurrence. Default: false
+# .logs.stack.trace.references=false

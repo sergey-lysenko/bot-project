@@ -1,0 +1,18 @@
+# ==============================================================================
+# WebDriver & Automation Engine Configuration
+# ==============================================================================
+
+# Explicit wait time in seconds for explicit waiting conditions. Default: 30
+# .test.ewait=30
+
+# ------------------------------------------------------------------------------
+# Implicit wait time in milliseconds while locating elements. Default: 1000
+# .webd.iwait=1000
+
+# ------------------------------------------------------------------------------
+# Forces the target platform (e.g., Android, iOS) instead of automatic platform detection. Default:
+# .webd.forced.platform=
+
+# ------------------------------------------------------------------------------
+# Recreates the WebDriver instance after encountering an exception. Default: true
+# .webd.recreate.driver.after.exception=true
