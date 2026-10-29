@@ -4,8 +4,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>works.lysenko</groupId>
-  <artifactId>biteheist-test</artifactId>
-  <version>0.1.0</version>
+  <artifactId>bot-project</artifactId>
+  <version>0.26.43.1</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,7 +14,7 @@
     <maven.test.failure.ignore>true</maven.test.failure.ignore>
 
     <!-- Framework version -->
-    <framework.version>0.26.40.7</framework.version>
+    <framework.version>0.26.43.21</framework.version>
 
     <!-- Plugin and agent versions -->
     <aspectj.version>1.9.21.2</aspectj.version>

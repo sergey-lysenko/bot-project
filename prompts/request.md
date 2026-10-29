@@ -5,7 +5,7 @@ Create one-level sub-scenario stubs for the $SELECTION scenario that halted the 
 ## Step 1: Pre-Flight Target Resolution & Safeguards
 
 > [!CAUTION]
-> **Strict Execution Guard**: Do **NOT** run test execution commands (`mvn test`, `BotRunner`, `mvn exec:java`, or test suite runners) during scenario expansion and verification. Running tests triggers live browser sessions and pollutes/overwrites the latest target run directory while analyzing DOM snapshots. Verification is strictly restricted to read operations and compile-time checks (`mvn test-compile`). Do **NOT** run `mvn clean`, as deleting `target/` wipes all test run snapshots and logs.
+> **Strict Execution Guard**: Do **NOT** run test execution commands (`mvn test`, `BotRunner`, `mvn exec:java`, or test suite runners) during scenario expansion and verification. Running tests triggers live browser sessions and pollutes/overwrites the latest target run directory while analyzing DOM snapshots. Verification is strictly restricted to read operations and compile-time checks (`mvn test-compile`). Do **NOT** run `mvn clean`, as deleting `../target` wipes all test run snapshots and logs.
 > *(To restart tests after completing scenario expansion, adhere strictly to the Automatic Restart Policy in Step 4.4).*
 
 Locate and verify the target scenario from the latest test execution before proceeding:
@@ -284,7 +284,7 @@ After completing scenario stub generation or terminal leaf marking in each turn:
 
 1. **Self-Review & Code Quality Verification**:
     - Check `git status` and `git diff` for unwanted changes, unused imports, or violated ordering/formatting conventions.
-    - Verify that all locators are properly registered in `src/main/resources/locators` and no raw strings exist in Java code.
+    - Verify that all locators are properly registered in `../src/main/resources/locators` and no raw strings exist in Java code.
     - Verify that multi-word phrases are passed directly without `c(...)`.
     - Run `mvn test-compile` to guarantee 0 compiler errors.
 
@@ -304,7 +304,7 @@ After completing scenario stub generation or terminal leaf marking in each turn:
       *(or `CI=true ./run.maven.bash`)*
     - **Execution Mechanics & Parameter Handling**:
       - Setting `CI=true` switches the framework into non-interactive/headless mode (`Routines.isInsideCI()`):
-        - Bypasses interactive GUI parameter dialogues (`Gui.java`) and automatically loads settings from `var/parameters` (or environment variables `DOMAIN`, `PLATFORM`, `POOL`, `TEST`).
+        - Bypasses interactive GUI parameter dialogues (`Gui.java`) and automatically loads settings from `../var/parameters` (or environment variables `DOMAIN`, `PLATFORM`, `POOL`, `TEST`).
         - Replaces the Swing GUI dashboard window with the file-based dashboard interface (`target/dash/`).
         - Suppresses automatic opening of the HTML run log in the desktop browser upon completion.
     - **Automatic Restart Policy**:
