@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "KnownIssues",
+  "description": "Schema for known issues tracked by the test automation framework",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KnownIssue"
+      }
+    }
+  },
+  "required": [
+    "issues"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "KnownIssue": {
+      "type": "object",
+      "properties": {
+        "scenario": {
+          "type": "string",
+          "description": "Target scenario short name or wildcard pattern (e.g. 'signIn.WrongPassword' or 'signIn.login.partners.addNew.random.absentData.*')"
+        },
+        "title": {
+          "type": "string",
+          "description": "Jira ticket ID or issue title (e.g. 'NODEJS-3113')"
+        },
+        "description": {
+          "type": "string",
+          "description": "Summary or description of the problem"
+        },
+        "link": {
+          "type": "string",
+          "description": "URL to the issue tracker ticket"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Log or exception pattern for automated matching"
+        }
+      },
+      "required": [
+        "scenario",
+        "link"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
