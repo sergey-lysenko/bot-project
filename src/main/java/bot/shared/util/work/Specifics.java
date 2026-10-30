@@ -4,7 +4,7 @@ import works.lysenko.tree.base.*;
 import works.lysenko.util.apis.exception.checked.*;
 
 /**
- * Exceptional handler for BiteHeist test execution.
+ * Exceptional handler for Bot test execution.
  */
 public class Specifics extends Exceptional {
 

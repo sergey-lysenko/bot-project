@@ -1,6 +1,6 @@
 /**
  * The package {@code interlink} contains various extensions of common implementations, which are relevant to
- * particular application. Goal of this package is to contain all "technical" stuff, so that {@code biteheist} is kept
+ * particular application. Goal of this package is to contain all "technical" stuff, so that {@code bot} is kept
  * focused on business logic only.
  *
  * @author Sergii Lysenko

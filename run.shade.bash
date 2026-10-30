@@ -13,7 +13,7 @@ log() {
 pushd "${dir}" || exit
 
  log "Starting Test execution from Shade Jar ..."
- java -jar target/biteheist-*-uber-jar.jar 2> "${errors}/${start}.errors.log"
+ java -jar target/*-uber-jar.jar 2> "${errors}/${start}.errors.log"
  code=$?
  
 popd || exit
