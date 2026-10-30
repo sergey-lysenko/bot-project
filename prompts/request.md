@@ -5,7 +5,7 @@ Create one-level sub-scenario stubs for the $SELECTION scenario that halted the 
 ## Step 1: Pre-Flight Target Resolution & Safeguards
 
 > [!CAUTION]
-> **Strict Execution Guard**: Do **NOT** run test execution commands (`mvn test`, `BotRunner`, `mvn exec:java`, or test suite runners) during scenario expansion and verification. Running tests triggers live browser sessions and pollutes/overwrites the latest target run directory while analyzing DOM snapshots. Verification is strictly restricted to read operations and compile-time checks (`mvn test-compile`). Do **NOT** run `mvn clean`, as deleting `../target` wipes all test run snapshots and logs.
+> **Strict Execution Guard**: Do **NOT** run test execution commands (`mvn test`, `BotRunner`, `mvn exec:java`, or test suite runners) during scenario expansion and verification. Running tests triggers live browser sessions and pollutes/overwrites the latest target run directory while analyzing DOM snapshots. Verification is strictly restricted to read operations and compile-time checks (`mvn test-compile`). Do **NOT** run `mvn clean`, as deleting `target` wipes all test run snapshots and logs.
 > *(To restart tests after completing scenario expansion, adhere strictly to the Automatic Restart Policy in Step 4.4).*
 
 Locate and verify the target scenario from the latest test execution before proceeding:
@@ -35,7 +35,9 @@ Locate and verify the target scenario from the latest test execution before proc
    *(If no `[FAILURE] Not implemented` entry is found in the latest run log or the target source file cannot be located, **HALT immediately** and report the test run status).*
 
 3. **Pre-Flight Eligibility Safeguards**:
-    - **Type Check**: Target must be a Java scenario class under `src/main/java/**/tree/` (not an interface, utility, or root runner) extending `Leaf`.
+    - **Type Check**: Target must be a Java scenario class under `src/main/java/**/tree/` extending `Leaf` (or `Node`).
+      > [!IMPORTANT]
+      > **Inheritance Rule**: Scenario classes in the test tree MUST extend `works.lysenko.tree.base.Leaf` (for executable leaf scenarios) or `works.lysenko.tree.base.Node` (for branch scenarios with child scenarios). Do **NOT** extend `works.lysenko.tree.Root` directly for scenario tree classes, as `Root` is the top-level UI interaction helper class and does not implement `_Scenario`.
     - **Unexpanded Check**: Target must call `notImplemented();` inside `action()` and have no existing child scenario package (`src/main/java/**/tree/<packagePath>/<classNameWithFirstLetterLower>/`).
     - **Terminal Guard**: Target must **NOT** already contain the terminal marker:
       ```text
@@ -75,9 +77,10 @@ Examine the exit snapshot (HTML & screenshot) to determine whether the state rev
     - **Table Internals & Row Actions**: Exclude raw table rows (`<tr style="cursor: pointer;">`) and destructive row action buttons (e.g. trash icons, `Delete`, `Remove`) to protect staging test data from deletion during automated crawler runs. Only include explicit non-destructive row action buttons (e.g. `Details`, `Edit`).
     - **Modal Dismiss/Close Controls**: Do **NOT** create stubs for modal dismiss controls (`button.close`, `[aria-label="Close"]`, buttons labeled `Close`, `Cancel`, or `Dismiss` that purely close the overlay without leading to a sub-view).
       > [!NOTE]
-      > *State Restoration & Overlay Leaks*: While dismiss controls do not become separate child stubs, if a terminal leaf scenario opened an overlay (e.g. an informational details modal or picker), that terminal leaf **must** perform the minimum operation (closing the opened dialogue via `waitThenClickOn(...)`) in its `action()` to restore the initial state for subsequent test execution (see Workflow A.2).
+      > *State Restoration & Overlay Leaks*: While dismiss controls do not become separate child stubs, if a terminal leaf scenario opened an overlay (e.g. an informational details modal or picker), that terminal leaf **must** perform the minimum operation in `action()` required to restore the initial state for subsequent test execution (see Workflow A.2).
       >
-      > *Distinguishing Leaked Overlays from Race Conditions*: If a subsequent test fails with `ElementClickInterceptedException` (e.g., clicking a navigation link like `FirstDelivery` where "Other element would receive the click: `<div class='modal fade show'...>`"), it is almost never a race condition in the failing navigation node. Instead, it is an **overlay leak** from a preceding leaf scenario (such as [`Details.java`](file:///Users/sergii/Repos/BiteHeist-test/src/main/java/biteheist/tree/signIn/correctLogin/auditLogs/Details.java)) that opened a modal without calling `waitThenClickOn(c(CLOSE))` or `waitThenClickOn(c(CANCEL))`.\n    - **Modal Form Submissions**: Do **NOT** create child stubs for modal form submit buttons (e.g. `Add`, `Create`, `Save`, `Submit` inside an active creation/edit modal dialog). Modal submission is tied to form data population and dismisses the dialog back to the parent view; it belongs to the terminal leaf functional implementation blueprint rather than an isolated branching action.
+      > *Distinguishing Leaked Overlays from Race Conditions*: If a subsequent test fails with `ElementClickInterceptedException` (e.g., clicking a navigation link where "Other element would receive the click: `<div class='modal fade show'...>`"), it is almost never a race condition in the failing navigation node. Instead, it is an **overlay leak** from a preceding leaf scenario that opened a modal without calling `waitThenClickOn(c(CLOSE))` or `waitThenClickOn(c(CANCEL))`.
+    - **Modal Form Submissions**: Do **NOT** create child stubs for modal form submit buttons (e.g. `Add`, `Create`, `Save`, `Submit` inside an active creation/edit modal dialog). Modal submission is tied to form data population and dismisses the dialog back to the parent view; it belongs to the terminal leaf functional implementation blueprint rather than an isolated branching action.
 
 ---
 
@@ -105,7 +108,7 @@ Follow this workflow if the view is purely informational (e.g. details dialogs),
     - **Initial State Restoration (Teardown Guard)**:
       If there is a clear indication that the scenario alters the view state in a way that blocks subsequent test execution (for example, opening an informational modal dialogue, drawer, or popover overlay that obstructs background controls and subsequent scenario discovery), add the minimum amount of operations in `action()` required to return the site to its initial state (e.g. closing the opened dialogue via dismiss button/icon or backdrop) after the triggering action and before `notImplemented(false);`. Any tokens or locators used for state restoration must strictly follow vocabulary (B.3) and locator registration (B.4) conventions without raw strings.
       > [!IMPORTANT]
-      > **Use `waitThenClickOn(...)` for State Restoration Teardown**: Because newly opened dialogs, drawers, or popovers take time to render and complete transition animations (e.g. CSS fade-ins), dismiss controls (such as `c(CLOSE)`, `c(CANCEL)`, or close icons) are often not immediately interactable. Always use `waitThenClickOn(...)` rather than `clickOn(...)` for state restoration dismissals (as demonstrated in [`AddNew.java`](file:///Users/sergii/Repos/BiteHeist-test/src/main/java/biteheist/tree/signIn/correctLogin/settings/posConfig/AddNew.java) and [`Details.java`](file:///Users/sergii/Repos/BiteHeist-test/src/main/java/biteheist/tree/signIn/correctLogin/auditLogs/Details.java)).
+      > **Use `waitThenClickOn(...)` for State Restoration Teardown**: Because newly opened dialogs, drawers, or popovers take time to render and complete transition animations (e.g. CSS fade-ins), dismiss controls (such as `c(CLOSE)`, `c(CANCEL)`, or close icons) are often not immediately interactable. Always use `waitThenClickOn(...)` rather than `clickOn(...)` for state restoration dismissals.
       >
       > **Overlay Leak Warning**: Never exit a leaf that opens a modal without closing it. An unclosed modal remains in the DOM across subsequent tests in the session, throwing `ElementClickInterceptedException` on arbitrary background navigation targets.
     - Insert the structured comment directly above `notImplemented` inside `action()` :
@@ -168,38 +171,38 @@ Follow this workflow if one or more view-specific interactive elements or sub-vi
 #### B.3. Formulate Vocabulary (No Raw Strings)
 Ensure no raw string literals are used in scenario code:
 - **Vocabulary Hierarchy & Lookup**:
-    1. **Upstream Framework**: Check `works.lysenko.util.lang.word.*` and `link.lang.word.*` first.
+    1. **Upstream Framework**: Check `works.lysenko.util.lang.word.*` and `works.lysenko.shared.lang.word.*` first.
        > [!TIP]
        > Inspect upstream framework vocabulary via classpath:
        > ```bash
-     > javap -cp $(mvn dependency:build-classpath -q -Dmdep.outputFile=/dev/stdout) works.lysenko.util.lang.word.<Letter> 2>/dev/null
-     > ```
-    2. **Project Single Words & Acronyms**: If absent upstream, define in `interlink.lang.word.<Letter>` as:
+       > javap -cp $(mvn dependency:build-classpath -q -Dmdep.outputFile=/dev/stdout) works.lysenko.util.lang.word.<Letter> 2>/dev/null
+       > ```
+    2. **Project Single Words & Acronyms**: If absent upstream, define in `bot.shared.lang.word.<Letter>` as:
        ```java
-       package interlink.lang.word;
-  
+       package bot.shared.lang.word;
+
        @SuppressWarnings({"ClassWithoutLogger", "MissingJavadoc", "StaticMethodOnlyUsedInOneClass", "AutoBoxing", "WeakerAccess"})
        public record <Letter>() {
-  
+
            // Must evaluate to lower-case string so c(<WORD>) and u(<WORD>) succeed:
            public static final String <WORD> = s(...);
            public static final String <ACRONYM> = s(...); // e.g. POS = s(PO, S);
-     }
+       }
        ```
-    3. **Multi-Word Phrases & Disambiguated Identifiers**: Define in `interlink.lang.<Letter>` as:
+    3. **Multi-Word Phrases & Disambiguated Identifiers**: Define in `bot.shared.lang.<Letter>` as:
        ```java
-       package interlink.lang;
-  
+       package bot.shared.lang;
+
        @SuppressWarnings({"ClassWithoutLogger", "MissingJavadoc", "StaticMethodOnlyUsedInOneClass", "AutoBoxing", "WeakerAccess"})
        public record <Letter>() {
-  
+
            public static final String <PHRASE> = b(c(<WORD1>), c(<WORD2>));
            // For phrases with acronyms:
            public static final String <PHRASE_WITH_ACRONYM> = b(u(<ACRONYM>), c(<WORD>)); // e.g. POS_CONFIG = b(u(POS), c(CONFIG));
        }
        ```
 - **Disambiguation Rule**: If a discovered item key conflicts with an existing locator description (e.g. `Dashboard` when `Dashboard==//a[@href='/admin']` already exists), disambiguate by prefixing with the parent context (e.g. `BILLING_DASHBOARD = b(c(BILLING), c(DASHBOARD))`).
-- **Ordering**: Maintain strict alphabetical order for constants and static imports in `interlink.lang.*` and `interlink.lang.word.*`.
+- **Ordering**: Maintain strict alphabetical order for constants and static imports in `bot.shared.lang.*` and `bot.shared.lang.word.*`.
 
 #### B.4. Register Locators
 In `src/main/resources/locators`, check and register entries (`Description==XPath/CSS`):
@@ -217,16 +220,18 @@ In the child package (named after parent class with first letter lowercase, e.g.
 - **Class name**: PascalCase of the element/action (e.g. `AddProfile`, `Save`, `BillingRules`, `ConfigureProducts`, `PosConfig`). For disambiguated elements (e.g. `BILLING_DASHBOARD`), use the disambiguated phrase in PascalCase (e.g. `BillingDashboard`).
 - **Annotations**: `@SuppressWarnings(\"unused\")`.
 - **Token Reference**:
-    - **Single-word tokens**: Import from `[inter]link.lang.word.<Letter>` and use `c(<WORD>)` in `fits()` and `action()`.
+    - **Single-word tokens**: Import from `bot.shared.lang.word.<Letter>` and use `c(<WORD>)` in `fits()` and `action()`.
     - **Acronyms / All-Caps tokens**: Use `u(<WORD>)` in `fits()` and `action()` (e.g. `u(CSV)`, `u(SMS)`).
-    - **Multi-word phrases**: Import from `interlink.lang.<Letter>` and use `<PHRASE>` directly.
+    - **Multi-word phrases**: Import from `bot.shared.lang.<Letter>` and use `<PHRASE>` directly.
       > [!CAUTION]
       > **Do NOT wrap multi-word phrases with `c(...)`**: Because `<PHRASE>` is already capitalized via `b(c(...), c(...))`, calling `c(<PHRASE>)` triggers an immediate runtime `AssertionError` (`assertNotEqualsSilent`). Omit `import static works.lysenko.util.data.strs.Case.c;` if only multi-word phrases are referenced.
 - **Method Implementation** (preserve blank lines around method bodies):
     - `fits()`: `return isPresent(...);`
-    - `action()`:\n        - Standard static controls: `clickOn(...);` followed by `notImplemented();`.
-        - **Navigation links, animated controls, or delayed elements**: Prefer `waitThenClickOn(...);` instead of `clickOn(...);` whenever the target element involves view transitions, page loads, sidebar expansion, or dynamic DOM insertion (e.g. [`FirstDelivery.java`](file:///Users/sergii/Repos/BiteHeist-test/src/main/java/biteheist/tree/signIn/correctLogin/FirstDelivery.java)).
-        - **Understanding `waitThenClickOn(...)` vs. Overlays**: `waitThenClickOn(...)` waits for `waitForVisibilityOf(...)` before clicking. While this prevents clicking elements before they render, it does **not** bypass an active modal backdrop blocking the click coordinates; overlay hygiene in preceding leaf nodes remains mandatory.\n    - `verify()`: `return true;`
+    - `action()`:
+        - Standard static controls: `clickOn(...);` followed by `notImplemented();`.
+        - **Navigation links, animated controls, or delayed elements**: Prefer `waitThenClickOn(...);` instead of `clickOn(...);` whenever the target element involves view transitions, page loads, sidebar expansion, or dynamic DOM insertion.
+        - **Understanding `waitThenClickOn(...)` vs. Overlays**: `waitThenClickOn(...)` waits for `waitForVisibilityOf(...)` before clicking. While this prevents clicking elements before they render, it does **not** bypass an active modal backdrop blocking the click coordinates; overlay hygiene in preceding leaf nodes remains mandatory.
+    - `verify()`: `return true;`
 
 **Template A: Single-Word Stub**
 ```java
@@ -240,13 +245,25 @@ import static works.lysenko.util.func.core.Assertions.notImplemented;
 import static <wordPackage>.<WORD>;
 
 @SuppressWarnings("unused")
-public class <ClassName> extends Leaf {\n\n    @Override
-    public final boolean fits() {\n\n        return isPresent(c(<WORD>));
-    }\n\n    @Override
-    public final void action() throws SafeguardException {\n\n        clickOn(c(<WORD>));
+public class <ClassName> extends Leaf {
+
+    @Override
+    public final boolean fits() {
+
+        return isPresent(c(<WORD>));
+    }
+
+    @Override
+    public final void action() throws SafeguardException {
+
+        clickOn(c(<WORD>));
         notImplemented();
-    }\n\n    @Override
-    public final boolean verify() throws SafeguardException {\n\n        return true;
+    }
+
+    @Override
+    public final boolean verify() throws SafeguardException {
+
+        return true;
     }
 }
 ```
@@ -258,17 +275,29 @@ package <parentPkg>.<classNameWithFirstLetterLower>;
 import works.lysenko.tree.base.Leaf;
 import works.lysenko.util.apis.exception.checked.SafeguardException;
 
-import static interlink.lang.<Letter>.<PHRASE>;
+import static bot.shared.lang.<Letter>.<PHRASE>;
 import static works.lysenko.util.func.core.Assertions.notImplemented;
 
 @SuppressWarnings("unused")
-public class <ClassName> extends Leaf {\n\n    @Override
-    public final boolean fits() {\n\n        return isPresent(<PHRASE>);
-    }\n\n    @Override
-    public final void action() throws SafeguardException {\n\n        clickOn(<PHRASE>);
+public class <ClassName> extends Leaf {
+
+    @Override
+    public final boolean fits() {
+
+        return isPresent(<PHRASE>);
+    }
+
+    @Override
+    public final void action() throws SafeguardException {
+
+        clickOn(<PHRASE>);
         notImplemented();
-    }\n\n    @Override
-    public final boolean verify() throws SafeguardException {\n\n        return true;
+    }
+
+    @Override
+    public final boolean verify() throws SafeguardException {
+
+        return true;
     }
 }
 ```
@@ -284,7 +313,7 @@ After completing scenario stub generation or terminal leaf marking in each turn:
 
 1. **Self-Review & Code Quality Verification**:
     - Check `git status` and `git diff` for unwanted changes, unused imports, or violated ordering/formatting conventions.
-    - Verify that all locators are properly registered in `../src/main/resources/locators` and no raw strings exist in Java code.
+    - Verify that all locators are properly registered in `src/main/resources/locators` and no raw strings exist in Java code.
     - Verify that multi-word phrases are passed directly without `c(...)`.
     - Run `mvn test-compile` to guarantee 0 compiler errors.
 
@@ -304,7 +333,7 @@ After completing scenario stub generation or terminal leaf marking in each turn:
       *(or `CI=true ./run.maven.bash`)*
     - **Execution Mechanics & Parameter Handling**:
       - Setting `CI=true` switches the framework into non-interactive/headless mode (`Routines.isInsideCI()`):
-        - Bypasses interactive GUI parameter dialogues (`Gui.java`) and automatically loads settings from `../var/parameters` (or environment variables `DOMAIN`, `PLATFORM`, `POOL`, `TEST`).
+        - Bypasses interactive GUI parameter dialogues (`Gui.java`) and automatically loads settings from `var/parameters` (or environment variables `DOMAIN`, `PLATFORM`, `POOL`, `SUITE`).
         - Replaces the Swing GUI dashboard window with the file-based dashboard interface (`target/dash/`).
         - Suppresses automatic opening of the HTML run log in the desktop browser upon completion.
     - **Automatic Restart Policy**:
@@ -318,4 +347,4 @@ After completing scenario stub generation or terminal leaf marking in each turn:
       - **Irregular Failures & Prompt Evolution (Human Confirmation Required)**:
         In all other cases, do **NOT** restart automatically. Stop and ask the user how to proceed:
         - If new insights, ambiguities, or friction points warrant prompt evolution, ask whether to update `var/request.md` first.
-        - If the previous halt was an irregular failure (e.g. `ElementClickInterceptedException`, `TimeoutException`, stale elements, authentication failure, network error, or unexpected assertion error), ask the user whether to diagnose and resolve the irregular failure, adjust test configuration in [`/Users/sergii/Repos/BiteHeist-test/var/parameters`](file:///Users/sergii/Repos/BiteHeist-test/var/parameters), or update the prompt.
+        - If the previous halt was an irregular failure (e.g. `ElementClickInterceptedException`, `TimeoutException`, stale elements, authentication failure, network error, or unexpected assertion error), ask the user whether to diagnose and resolve the irregular failure, adjust test configuration in `var/parameters`, or update the prompt.
