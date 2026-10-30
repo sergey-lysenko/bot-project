@@ -14,14 +14,14 @@
     <maven.test.failure.ignore>true</maven.test.failure.ignore>
 
     <!-- Framework version -->
-    <framework.version>0.26.44.27</framework.version>
+    <framework.version>0.26.45-SNAPSHOT</framework.version>
 
     <!-- Plugin and agent versions -->
     <aspectj.version>1.9.21.2</aspectj.version>
     <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
     <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
-    <maven-shade-plugin.version>3.5.2</maven-shade-plugin.version>
+    <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
     <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
   </properties>
 
@@ -101,17 +101,36 @@
             <configuration>
               <filters>
                 <filter>
+                  <artifact>works.lysenko:framework</artifact>
+                  <excludes>
+                    <exclude>config/**</exclude>
+                    <exclude>known/colours</exclude>
+                  </excludes>
+                </filter>
+                <filter>
                   <artifact>*:*</artifact>
                   <excludes>
+                    <exclude>module-info.class</exclude>
+                    <exclude>META-INF/versions/*/module-info.class</exclude>
                     <exclude>META-INF/*.SF</exclude>
                     <exclude>META-INF/*.DSA</exclude>
                     <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                    <exclude>META-INF/LICENSE*</exclude>
+                    <exclude>META-INF/NOTICE*</exclude>
+                    <exclude>META-INF/DEPENDENCIES</exclude>
+                    <exclude>META-INF/AL2.0</exclude>
+                    <exclude>META-INF/LGPL2.1</exclude>
+                    <exclude>META-INF/*.kotlin_module</exclude>
+                    <exclude>META-INF/maven/**</exclude>
+                    <exclude>META-INF/io.netty.versions.properties</exclude>
                   </excludes>
                 </filter>
               </filters>
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>uber-jar</shadedClassifierName>
               <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                 <transformer
                   implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>bot.BotRunner</mainClass>
