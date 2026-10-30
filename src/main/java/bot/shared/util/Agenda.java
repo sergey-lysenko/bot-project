@@ -1,8 +1,8 @@
-package interlink.util;
+package bot.shared.util;
 
 
-import interlink.util.spec.*;
-import interlink.util.work.*;
+import bot.shared.util.spec.*;
+import bot.shared.util.work.*;
 import works.lysenko.util.data.records.test.*;
 
 import java.util.List;

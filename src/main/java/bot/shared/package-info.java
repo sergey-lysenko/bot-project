@@ -6,4 +6,4 @@
  * @author Sergii Lysenko
  * @email sergii@lysenko.works
  */
-package interlink;
+package bot.shared;

@@ -1,6 +1,6 @@
-package interlink.lang;
+package bot.shared.lang.word;
 
 @SuppressWarnings({"ClassWithoutLogger", "MissingJavadoc", "StaticMethodOnlyUsedInOneClass", "AutoBoxing", "WeakerAccess"})
-public record A() {
+public record B() {
 
 }

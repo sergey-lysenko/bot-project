@@ -1,6 +1,6 @@
 package bot;
 
-import static interlink.util.Agenda.*;
+import static bot.shared.util.Agenda.*;
 import static works.lysenko.base.test.Routines.*;
 
 /**

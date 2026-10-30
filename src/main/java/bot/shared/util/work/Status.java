@@ -1,4 +1,4 @@
-package interlink.util.work;
+package bot.shared.util.work;
 
 import works.lysenko.util.apis.core.*;
 

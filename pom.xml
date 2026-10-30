@@ -14,7 +14,7 @@
     <maven.test.failure.ignore>true</maven.test.failure.ignore>
 
     <!-- Framework version -->
-    <framework.version>0.26.43.21</framework.version>
+    <framework.version>0.26.44.27</framework.version>
 
     <!-- Plugin and agent versions -->
     <aspectj.version>1.9.21.2</aspectj.version>
